@@ -1,5 +1,5 @@
 const CATALOGO = {
- "atualizado": "2026-11-12 00:33",
+ "atualizado": "2026-11-12 00:35",
  "produtos": [
   {
    "id": 105,
@@ -16,6 +16,14 @@ const CATALOGO = {
    "preco": 44.9,
    "est": "pouco",
    "foto": "fotos/632f86ce35d84d62aa8527b20a9881c5.jpg"
+  },
+  {
+   "id": 106,
+   "nome": "CHALEIRA JARRA ELETRICA INOX 1.8 LITROS POTENCIA 1200W 110V ONISTEK",
+   "cat": "CASA/COZINHA",
+   "preco": 79.9,
+   "est": "pouco",
+   "foto": "fotos/fb7facf0271842e787d9a049b7ad36d6.jpg"
   }
  ]
 };
