@@ -1,0 +1,226 @@
+<title>Império das Capas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap">
+<style>
+/* Layout: vitrine de loja local. Topo com nome e WhatsApp, busca fixa, categorias em linha, grade de produtos, rodapé com endereço. */
+:root{
+  --bg:#f5f4ef; --surface:#ffffff; --fg:#141414; --muted:#5e5a4e; --line:#e4e1d6;
+  --brand:#111111; --brand-fg:#ffffff; --gold:#ffc400; --gold-fg:#1a1400;
+  --ok:#1a7f4b; --warn:#a15c00; --wa:#1fa855; --wa-fg:#ffffff;
+  --font-display:"Sora",system-ui,sans-serif; --font-body:"Inter",system-ui,sans-serif;
+  --shadow:0 1px 2px rgba(20,20,10,.06),0 6px 18px rgba(20,20,10,.06);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c0c0c; --surface:#171717; --fg:#f4f2ea; --muted:#aaa595; --line:#2d2b24;
+  --brand:#000000; --brand-fg:#ffffff; --gold:#ffc400; --gold-fg:#1a1400;
+  --ok:#52c98a; --warn:#f0b35a; --wa:#25b862; --wa-fg:#04210f; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c0c0c; --surface:#171717; --fg:#f4f2ea; --muted:#aaa595; --line:#2d2b24;
+  --brand:#000000; --brand-fg:#ffffff; --gold:#ffc400; --gold-fg:#1a1400;
+  --ok:#52c98a; --warn:#f0b35a; --wa:#25b862; --wa-fg:#04210f; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.35); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.5;margin:0}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+
+.aviso{background:var(--gold);color:var(--gold-fg);font-size:13px;font-weight:500;padding-block:7px;text-align:center}
+.aviso .wrap{display:block}
+header.topo{background:var(--brand);color:var(--brand-fg);padding-block:18px 22px}
+.topo .linha{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.marca{display:flex;gap:12px;align-items:center;min-width:0}
+.coroa{width:42px;height:42px;border-radius:12px;background:var(--gold);color:var(--gold-fg);display:grid;place-items:center;flex:none}
+.marca h1{font-family:var(--font-display);font-weight:800;font-size:21px;line-height:1.1;margin:0;letter-spacing:-.01em}
+.marca p{margin:2px 0 0;font-size:13px;opacity:.8}
+.btn-wa{display:inline-flex;align-items:center;gap:8px;background:var(--wa);color:var(--wa-fg);font-weight:600;text-decoration:none;padding:10px 16px;border-radius:999px;border:0;font-size:14px;font-family:inherit;cursor:pointer}
+.btn-wa:hover{filter:brightness(1.06)}
+.chamada{font-family:var(--font-display);font-weight:700;font-size:clamp(22px,5.2vw,32px);line-height:1.15;margin:22px 0 6px;max-width:22ch;text-wrap:balance}
+.sub{margin:0;opacity:.85;max-width:52ch}
+
+.barra{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-block:12px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--brand)}
+.busca{width:100%;font:inherit;font-size:16px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.busca::placeholder{color:var(--muted)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-block:12px 2px;scrollbar-width:thin}
+.chip{flex:none;font:inherit;font-size:14px;font-weight:500;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--brand-fg);border-color:var(--brand)}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{border-color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{border-color:var(--gold)}}
+
+main{padding-block:20px 8px}
+.cont{margin:0 0 14px;color:var(--muted);font-size:13px}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;text-align:left;font:inherit;color:inherit;cursor:pointer;padding:0;min-width:0;box-shadow:var(--shadow)}
+.card:hover{border-color:var(--gold)}
+.foto{aspect-ratio:1/1;display:grid;place-items:center;max-width:100%}
+.foto svg{width:46%;height:46%}
+.corpo{padding:12px 13px 14px;display:flex;flex-direction:column;gap:5px;flex:1;min-width:0}
+.cat{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.nome{font-weight:600;font-size:14px;line-height:1.3;overflow-wrap:anywhere}
+.preco{font-family:var(--font-display);font-weight:700;font-size:19px;margin-top:auto;padding-top:4px;font-variant-numeric:tabular-nums}
+.est{font-size:12px;font-weight:500}
+.est.ok{color:var(--ok)} .est.pouco{color:var(--warn)}
+.vazio{padding:40px 8px;text-align:center;color:var(--muted)}
+
+/* detalhe do produto */
+.fundo{position:fixed;inset:0;background:rgba(8,12,24,.6);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.fundo[hidden]{display:none}
+.folha{background:var(--surface);color:var(--fg);width:100%;max-width:520px;max-height:92%;overflow:auto;border-radius:20px 20px 0 0;padding:0 0 max(18px,env(safe-area-inset-bottom,0px))}
+@media (min-width:640px){.fundo{align-items:center}.folha{border-radius:20px}}
+.folha .foto{aspect-ratio:16/10;position:relative}
+.folha .foto svg{width:28%;height:auto}
+.fechar{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:0;background:var(--surface);color:var(--fg);font-size:20px;cursor:pointer;box-shadow:var(--shadow)}
+.det{padding:18px max(18px,env(safe-area-inset-left,0px)) 6px;display:flex;flex-direction:column;gap:8px}
+.det h2{font-family:var(--font-display);font-size:21px;line-height:1.2;margin:0;text-wrap:balance}
+.det .preco{font-size:30px;margin:0;padding:0}
+.det p{margin:0;color:var(--muted)}
+.det .btn-wa{justify-content:center;padding:14px 18px;font-size:16px;margin-top:6px}
+.nota{font-size:12px;color:var(--muted)}
+
+footer{background:var(--brand);color:var(--brand-fg);margin-top:30px;padding-block:26px 34px}
+footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
+footer h3{font-family:var(--font-display);font-size:14px;margin:0 0 6px;color:var(--gold)}
+footer p{margin:0 0 4px;font-size:14px;opacity:.9;overflow-wrap:anywhere}
+footer a{color:var(--brand-fg)}
+.rodape-nota{margin-top:20px;font-size:12px;opacity:.65}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s,transform .15s}.card:hover{transform:translateY(-2px)}}
+</style>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"Império das Capas","telephone":"+55 22 98835-4981",
+ "address":{"@type":"PostalAddress","streetAddress":"Rua Dr. José Francisco, 131, Centro","addressLocality":"São Fidélis","addressRegion":"RJ","addressCountry":"BR"},
+ "description":"Capas, películas, carregadores, fones e acessórios para celular em São Fidélis, RJ."}
+</script>
+
+<div class="aviso" id="aviso"><div class="wrap">Prévia do site com produtos de exemplo. Os preços e nomes são fictícios.</div></div>
+
+<header class="topo">
+  <div class="wrap">
+    <div class="linha">
+      <div class="marca">
+        <div class="coroa" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18 2 7l5.2 4.3L12 4l4.8 7.3L22 7l-1 11H3Zm1 2h16v2H4v-2Z"/></svg></div>
+        <div><h1>Império das Capas</h1><p>São Fidélis · RJ</p></div>
+      </div>
+      <a class="btn-wa" id="wa-topo" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
+    </div>
+    <h2 class="chamada">Tudo para o seu celular, aqui no Centro de São Fidélis.</h2>
+    <p class="sub">Veja o que tem na loja e o preço antes de sair de casa. Gostou de algo? Chame no WhatsApp que a gente separa para você.</p>
+  </div>
+</header>
+
+<div class="barra">
+  <div class="wrap">
+    <input class="busca" id="busca" type="search" placeholder="Buscar: capa iPhone 13, carregador, fone..." autocomplete="off" aria-label="Buscar produtos">
+    <div class="chips" id="chips" role="group" aria-label="Categorias"></div>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <p class="cont" id="cont" aria-live="polite"></p>
+    <div class="grade" id="grade"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div><h3>Onde estamos</h3><p>Rua Dr. José Francisco, 131</p><p>Centro, São Fidélis, RJ</p>
+        <p><a href="https://www.google.com/maps/search/?api=1&query=Imp%C3%A9rio+das+Capas+Rua+Dr+Jos%C3%A9+Francisco+131+S%C3%A3o+Fid%C3%A9lis+RJ" target="_blank" rel="noopener">Como chegar (Google Maps)</a></p></div>
+      <div><h3>Contato</h3><p>WhatsApp e telefone: (22) 98835-4981</p><p><a id="wa-rodape" href="#" target="_blank" rel="noopener">Chamar no WhatsApp</a></p></div>
+      <div><h3>Horário</h3><p>Segunda a sexta: 09h às 18h</p><p>Sábado: 09h às 13h</p><p>Domingo: fechado</p></div>
+    </div>
+    <p class="rodape-nota">Preços e disponibilidade podem mudar. Confirme no WhatsApp antes de vir.</p>
+  </div>
+</footer>
+
+<div class="fundo" id="fundo" hidden>
+  <div class="folha" role="dialog" aria-modal="true" aria-labelledby="d-nome" id="folha"></div>
+</div>
+
+<script src="catalogo.js"></script>
+<script>
+const ZAP = "5522988354981";
+const CATS = {
+  "Capas":       {cor:"#141414", fundo:"#ffefb0", fundoE:"#2a2410", g:'<rect x="6" y="2.5" width="12" height="19" rx="3"/><circle cx="9.5" cy="6.5" r="1.3"/><circle cx="9.5" cy="10" r="1.3"/>'},
+  "Películas":   {cor:"#141414", fundo:"#ffefb0", fundoE:"#2a2410", g:'<rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M9 17 15 7M12 18l4-7"/>'},
+  "Carregadores e cabos": {cor:"#141414", fundo:"#ffefb0", fundoE:"#2a2410", g:'<path d="M13 2 5 13h6l-1 9 8-11h-6l1-9Z"/>'},
+  "Áudio":       {cor:"#141414", fundo:"#ffefb0", fundoE:"#2a2410", g:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>'},
+  "Acessórios":  {cor:"#141414", fundo:"#ffefb0", fundoE:"#2a2410", g:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>'},
+  "Casa e utilidades": {cor:"#141414", fundo:"#ffefb0", fundoE:"#2a2410", g:'<path d="M7 8h10l-1 13H8L7 8Z"/><path d="M6 8h12M9 5h6l1 3H8l1-3Z"/>'}
+};
+/* Exemplo: no site real, este catálogo vem do PDV (só os produtos marcados para publicar). */
+let P = [
+ ["Capa Anti-impacto Transparente iPhone 13","Capas",34.90,"ok"],
+ ["Capa de Silicone Aveludada Samsung A15","Capas",29.90,"ok"],
+ ["Capa Motorola G54 com Porta-cartão","Capas",39.90,"pouco"],
+ ["Capa Case com Anel Redmi Note 13","Capas",27.90,"ok"],
+ ["Película 3D Cobertura Total iPhone 11","Películas",19.90,"ok"],
+ ["Película de Vidro Samsung A15","Películas",14.90,"ok"],
+ ["Película Protetora de Câmera iPhone 14","Películas",12.90,"pouco"],
+ ["Carregador Turbo 25W USB-C","Carregadores e cabos",69.90,"ok"],
+ ["Cabo USB-C Reforçado 1 metro","Carregadores e cabos",24.90,"ok"],
+ ["Cabo Lightning para iPhone 1 metro","Carregadores e cabos",32.90,"ok"],
+ ["Power Bank 10.000 mAh","Carregadores e cabos",89.90,"pouco"],
+ ["Fone Bluetooth TWS com Estojo","Áudio",79.90,"ok"],
+ ["Fone de Ouvido com Fio P2","Áudio",14.90,"ok"],
+ ["Caixa de Som Bluetooth Portátil","Áudio",64.90,"ok"],
+ ["Suporte Veicular Magnético","Acessórios",29.90,"ok"],
+ ["Pop Socket Pop It Sortido","Acessórios",9.90,"ok"],
+ ["Anel Suporte para Celular","Acessórios",7.90,"ok"],
+ ["Liquidificador Portátil Recarregável","Casa e utilidades",59.90,"ok"],
+ ["Processador de Alimentos Elétrico","Casa e utilidades",79.90,"pouco"]
+].map((x,i)=>({id:i+1,nome:x[0],cat:x[1],preco:x[2],est:x[3],foto:""}));
+if (typeof CATALOGO !== "undefined" && CATALOGO.produtos) { P = CATALOGO.produtos; const av=document.getElementById("aviso"); if(av) av.remove(); }
+const CAT_PADRAO = {cor:"#141414", fundo:"#ffefb0", fundoE:"#2a2410", g:'<path d="M4 8l8-4 8 4v8l-8 4-8-4V8Z"/><path d="M4 8l8 4 8-4M12 12v8"/>'};
+
+const $ = s => document.querySelector(s);
+const brl = n => n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const dark = () => { const t=document.documentElement.getAttribute("data-theme"); return t? t==="dark" : matchMedia("(prefers-color-scheme: dark)").matches; };
+const wa = txt => "https://wa.me/"+ZAP+"?text="+encodeURIComponent(txt);
+let cat = "Todos", q = "";
+
+function foto(p, extra="", id=""){
+  const c = CATS[p.cat] || CAT_PADRAO;
+  const idA = id ? ` id="${id}"` : "";
+  if (p.foto) return `<div class="foto"${idA} style="background:${dark()?c.fundoE:c.fundo};position:relative"><img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">${extra}</div>`;
+  return `<div class="foto"${idA} style="background:${dark()?c.fundoE:c.fundo};color:${dark()?'#ffc400':c.cor}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${c.g}</svg>${extra}</div>`;
+}
+const estTxt = p => p.est==="pouco" ? '<span class="est pouco">Poucas unidades</span>' : '<span class="est ok">Disponível na loja</span>';
+
+function catsUsadas(){ const u=[...new Set(P.map(p=>p.cat))]; const ord=Object.keys(CATS); return u.sort((a,b)=>{const x=ord.indexOf(a),y=ord.indexOf(b); return (x<0?99:x)-(y<0?99:y)||a.localeCompare(b,"pt-BR");}); }
+function chips(){
+  $("#chips").innerHTML = ["Todos",...catsUsadas()].map(c=>`<button class="chip" type="button" data-c="${esc(c)}" aria-pressed="${c===cat}">${esc(c)}</button>`).join("");
+}
+function lista(){
+  const t = norm(q.trim());
+  const r = P.filter(p => (cat==="Todos"||p.cat===cat) && (!t || norm(p.nome+" "+p.cat).includes(t)));
+  $("#cont").textContent = r.length ? `${r.length} produto${r.length>1?"s":""}${cat!=="Todos"?" em "+cat:""}` : "";
+  $("#grade").innerHTML = r.length ? r.map(p=>`<button class="card" type="button" data-id="${p.id}">${foto(p)}<div class="corpo"><span class="cat">${esc(p.cat)}</span><span class="nome">${esc(p.nome)}</span>${estTxt(p)}<span class="preco">${brl(p.preco)}</span></div></button>`).join("")
+    : `<div class="vazio" style="grid-column:1/-1">Não achei esse produto aqui no site. Pergunte no WhatsApp: pode estar na loja.<br><br><a class="btn-wa" target="_blank" rel="noopener" href="${wa("Olá! Procuro: "+q)}">Perguntar no WhatsApp</a></div>`;
+}
+let voltar = null;
+function abrir(id){
+  const p = P.find(x=>x.id===id); if(!p) return;
+  voltar = document.activeElement;
+  $("#folha").innerHTML = `${foto(p,'<button class="fechar" type="button" id="fechar" aria-label="Fechar">×</button>',"d-foto")}
+   <div class="det"><span class="cat">${esc(p.cat)}</span><h2 id="d-nome">${esc(p.nome)}</h2><div class="preco">${brl(p.preco)}</div>${estTxt(p)}
+   <a class="btn-wa" target="_blank" rel="noopener" href="${wa("Olá! Vi no site o produto \""+p.nome+"\" por "+brl(p.preco)+". Ainda tem?")}">Tenho interesse</a>
+   <p class="nota">Abre o WhatsApp da loja com a mensagem pronta. Confirme a disponibilidade antes de vir.</p></div>`;
+  $("#fundo").hidden = false; document.body.style.overflow = "hidden"; $("#fechar").focus();
+}
+function fechar(){ $("#fundo").hidden = true; document.body.style.overflow = ""; if(voltar && voltar.focus) voltar.focus(); }
+
+$("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip"); if(!b) return; cat=b.dataset.c; chips(); lista();});
+$("#busca").addEventListener("input",e=>{q=e.target.value; lista();});
+$("#grade").addEventListener("click",e=>{const c=e.target.closest(".card"); if(c) abrir(+c.dataset.id);});
+$("#fundo").addEventListener("click",e=>{ if(e.target.id==="fundo"||e.target.id==="fechar") fechar(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("#fundo").hidden) fechar(); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",lista);
+$("#wa-topo").href = wa("Olá! Vim pelo site da Império das Capas.");
+$("#wa-rodape").href = wa("Olá! Vim pelo site da Império das Capas.");
+chips(); lista();
+</script>
