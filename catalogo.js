@@ -1,5 +1,5 @@
 const CATALOGO = {
- "atualizado": "2026-11-11 23:57",
+ "atualizado": "2026-11-12 00:33",
  "produtos": [
   {
    "id": 105,
